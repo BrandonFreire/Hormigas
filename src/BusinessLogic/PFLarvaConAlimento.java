@@ -1,18 +1,29 @@
 package BusinessLogic;
 public class PFLarvaConAlimento {
-    private String larva;
-    private String alimento;
+    private String pfLarva;
+    private String pfAlimento;
+    private String pfClasificacion;
 
-    public PFLarvaConAlimento(String larva, String alimento) {
-        this.larva = larva;
-        this.alimento = alimento;
+    public PFLarvaConAlimento(String pfLarva, String pfAlimento) {
+        this.pfLarva = pfLarva;
+        this.pfAlimento = pfAlimento;
+    }
+    
+    public PFLarvaConAlimento(String pfLarva, String pfAlimento, String pfClasificacion) {
+        this.pfLarva = pfLarva;
+        this.pfAlimento = pfAlimento;
+        this.pfClasificacion= pfClasificacion;
     }
 
     public String getLarva() {
-        return larva;
+        return pfLarva;
     }
 
     public String getAlimento() {
-        return alimento;
+        return pfAlimento;
+    }
+    
+    public String getPfClasificacion() {
+        return pfClasificacion;
     }
 }

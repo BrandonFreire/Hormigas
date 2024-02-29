@@ -121,7 +121,6 @@ public class PFHormiga implements IPFHormiga {
 
                         // Quitar el alimento de la lista (si se desea)
                         PFAlimentos.remove(indiceAleatorio);
-                        manejoArchivos = new IJManejoArchivos();
                         manejoArchivos.eliminarElementoDelArchivo("src/setAlimento.txt", alimento);
                         listaLarvasConAlimentos.add(new PFLarvaConAlimento(pfLarva, alimento));
                         setBandera(true);
@@ -131,9 +130,9 @@ public class PFHormiga implements IPFHormiga {
                 }
                 numLarva++;
             }
-            //System.out.println("Las larvas con su alimento respectivo son los siguientes");
-            //imprimirListaLarvasConAlimentos(listaLarvasConAlimentos);
             escribirArchivoLarvaClasificacion(listaLarvasConAlimentos);
+            System.out.println("***************************************");
+            System.out.println("Las larvas alimentadas son:");
             manejoArchivos.leerArchivo("src/LarvaClasificacion.txt");
         } else {
             System.out.println("No hay larvas para alimentar.");
@@ -166,7 +165,49 @@ public class PFHormiga implements IPFHormiga {
         }
     }
     private String obtenerClasificacion(String alimento) {
-        // Asignar "Rastreadora" si el alimento es "Hervivoro", de lo contrario, dejarlo vacío
+        // Asignar "Rastreadora" si el alimento es "Hervivoro", de lo contrario, muere
         return alimento.equalsIgnoreCase("Herbivoro") ? "Rastreadora" : "Muerta";
+    }
+
+    public List<PFLarvaConAlimento> PFObtenerYEliminarRastreadorasDesdeArchivo() {
+        String nombreArchivo = "LarvaClasificacion.txt";
+        List<PFLarvaConAlimento> listaRastreadoras = new ArrayList<>();
+        List<PFLarvaConAlimento> listaLarvas = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(nombreArchivo))) {
+            String linea;
+            while ((linea = reader.readLine()) != null) {
+                String[] partes = linea.split(";");
+                if (partes.length == 3) {
+                    String larva = partes[0];
+                    String alimento = partes[1];
+                    String clasificacion = partes[2];
+
+                    listaLarvas.add(new PFLarvaConAlimento(larva, alimento, clasificacion));
+
+                    // Verificar si la clasificación es "Rastreadora"
+                    if (clasificacion.equals("Rastreadora")) {
+                        listaRastreadoras.add(new PFLarvaConAlimento(larva, alimento, clasificacion));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Eliminar las larvas con clasificación "Rastreadora" del archivo
+        PDEliminarRastreadorasDelArchivo(nombreArchivo, listaRastreadoras);
+
+        return listaRastreadoras;
+    }
+
+    private void PDEliminarRastreadorasDelArchivo(String nombreArchivo, List<PFLarvaConAlimento> listaRastreadoras) {
+        for (PFLarvaConAlimento rastreadora : listaRastreadoras) {
+            manejoArchivos.eliminarElementoDelArchivo(nombreArchivo, rastreadora.getLarva() + ";" + rastreadora.getAlimento() + ";" + rastreadora.getPfClasificacion());
+        }
+    }
+
+    public void PFLarvas40(){
+        
     }
 }
