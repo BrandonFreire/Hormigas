@@ -5,6 +5,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
 import BusinessLogic.JIInterfaz.IPFHormiga;
 
 public class PFHormiga implements IPFHormiga {
@@ -61,10 +63,10 @@ public class PFHormiga implements IPFHormiga {
         Larva
     }
 
-    public List<String> PFLarvas() {
+    public List<String> PFLarvas(int cantidad) {
         List<String> listLarvas = new ArrayList<>();
         int num = 1;
-        for (int i = 0; i < 40; i++) {
+        for (int i = 0; i < cantidad; i++) {
             listLarvas.add("Larva " + num);
             num++;
         }
@@ -85,10 +87,30 @@ public class PFHormiga implements IPFHormiga {
 
     @Override
     public boolean comer() {
+        boolean bandera = true;
+        if ((!PFAlimentos.isEmpty())){
+            bandera = true;
+        }else{
+            bandera = false;
+        }
         return true;
     }
+ 
+    public void pfDarComer(List<String> PFLarvas) {
+        Random PFRandom = new Random();
+        int numLarva = 1;
+        for (String pfLarva : PFLarvas) {
+            if (comer()) {
+                System.out.println("Alimentado a la larva "+numLarva);
+                int indiceAleatorio = PFRandom.nextInt(PFAlimentos.size());
+                String alimento = PFAlimentos.get(indiceAleatorio);
+                PFAsignarAlimento(pfLarva, alimento);
+            }
+            numLarva++;
+        }
+    }
 
-    public void pfDarComer() {
-
+    private void PFAsignarAlimento(String larva, String alimento) {
+        System.out.println("Asignando " + alimento + " a " + larva);
     }
 }

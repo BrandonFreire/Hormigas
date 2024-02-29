@@ -9,9 +9,8 @@ public class App {
         PFHormiga hormigaReina = new PFHormiga(PFHormiga.PFTiposHormiga.Reina);
         PFHormiga hormigaLarva = new PFHormiga(PFHormiga.PFTiposHormiga.Larva);
         //hormigaLarva.IFLarvas();
-        System.out.println(hormigaLarva.PFLarvas());
-
-
+        //System.out.println(hormigaLarva.PFLarvas());
+        hormigaLarva.pfDarComer(hormigaLarva.PFLarvas(40));
 
         // System.out.println(listLarvas);
 
