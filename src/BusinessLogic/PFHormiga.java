@@ -12,7 +12,16 @@ import BusinessLogic.JIInterfaz.IPFHormiga;
 public class PFHormiga implements IPFHormiga {
     private String PFNombreClasificacion;
     private ArrayList<String> PFAlimentos;
+    private boolean bandera;
     
+
+    public boolean isBandera() {
+        return bandera;
+    }
+
+    public void setBandera(boolean bandera) {
+        this.bandera = bandera;
+    }
 
     public String getPFNombreClasificacion() {
         return PFNombreClasificacion;
@@ -106,6 +115,9 @@ public class PFHormiga implements IPFHormiga {
     
                         // Quitar el alimento de la lista (si se desea)
                         PFAlimentos.remove(indiceAleatorio);
+                        IJManejoArchivos manejoArchivos = new IJManejoArchivos();
+                        manejoArchivos.eliminarElementoDelArchivo("src/setAlimento.txt", alimento);
+                        setBandera(true);
                     } else {
                         System.out.println("No hay alimentos disponibles para la larva " + numLarva);
                     }

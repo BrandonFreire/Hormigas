@@ -33,7 +33,7 @@ public class IJManejoArchivos {
                 }
             }
 
-            System.out.println("Se eliminó el primer '" + elementoAEliminar + "' del archivo.");
+            //System.out.println("Se eliminó el primer '" + elementoAEliminar + "' del archivo.");
 
         } catch (IOException e) {
             e.printStackTrace();
