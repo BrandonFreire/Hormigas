@@ -6,6 +6,8 @@ public class App {
         JIHormigaReina hormigaReina = new JIHormigaReina("REINA");
         // List<String> listLarvas = hormigaReina.IFLarvas();
         // System.out.println(listLarvas);
-        
+        IJManejoArchivos manejoArchivos = new IJManejoArchivos();
+        manejoArchivos.eliminarElementoDelArchivo("src/setAlimento.txt", "Carnivoro");
+        manejoArchivos.leerArchivo("src/setAlimento.txt");
     }
 }
