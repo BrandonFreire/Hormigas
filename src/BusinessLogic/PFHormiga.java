@@ -1,7 +1,9 @@
 package BusinessLogic;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +14,10 @@ import BusinessLogic.JIInterfaz.IPFHormiga;
 public class PFHormiga implements IPFHormiga {
     private String PFNombreClasificacion;
     private ArrayList<String> PFAlimentos;
+    public PFLarvaConAlimento pfLarvaConAlimento;
+    private List<PFLarvaConAlimento> listaLarvasConAlimentos;
     private boolean bandera;
-    
+    private IJManejoArchivos manejoArchivos;
 
     public boolean isBandera() {
         return bandera;
@@ -32,7 +36,9 @@ public class PFHormiga implements IPFHormiga {
     }
 
     public PFHormiga(PFTiposHormiga tiposHormiga) {
+        listaLarvasConAlimentos = new ArrayList<>();
         PFAlimentos = new ArrayList<>();
+        manejoArchivos = new IJManejoArchivos();
         switch (tiposHormiga) {
             case Reina:
                 this.PFNombreClasificacion = "reina";
@@ -90,33 +96,34 @@ public class PFHormiga implements IPFHormiga {
     @Override
     public boolean comer() {
         boolean bandera = true;
-        if ((!PFAlimentos.isEmpty())){
+        if ((!PFAlimentos.isEmpty())) {
             bandera = true;
-        }else{
+        } else {
             bandera = false;
         }
         return true;
     }
- 
+
     public void pfDarComer() {
-        List<String> larvas = PFLarvas(); 
-        if (!larvas.isEmpty()) { 
+        List<String> larvas = PFLarvas();
+        if (!larvas.isEmpty()) {
             Random PFRandom = new Random();
             int numLarva = 1;
-    
+
             for (String pfLarva : larvas) {
                 if (comer()) {
                     System.out.println("Alimentado a la larva " + numLarva);
-                    
+
                     if (!PFAlimentos.isEmpty()) { // Verificar si hay alimentos disponibles
                         int indiceAleatorio = PFRandom.nextInt(PFAlimentos.size());
                         String alimento = PFAlimentos.get(indiceAleatorio);
                         PFAsignarAlimento(pfLarva, alimento);
-    
+
                         // Quitar el alimento de la lista (si se desea)
                         PFAlimentos.remove(indiceAleatorio);
-                        IJManejoArchivos manejoArchivos = new IJManejoArchivos();
+                        manejoArchivos = new IJManejoArchivos();
                         manejoArchivos.eliminarElementoDelArchivo("src/setAlimento.txt", alimento);
+                        listaLarvasConAlimentos.add(new PFLarvaConAlimento(pfLarva, alimento));
                         setBandera(true);
                     } else {
                         System.out.println("No hay alimentos disponibles para la larva " + numLarva);
@@ -124,13 +131,42 @@ public class PFHormiga implements IPFHormiga {
                 }
                 numLarva++;
             }
+            //System.out.println("Las larvas con su alimento respectivo son los siguientes");
+            //imprimirListaLarvasConAlimentos(listaLarvasConAlimentos);
+            escribirArchivoLarvaClasificacion(listaLarvasConAlimentos);
+            manejoArchivos.leerArchivo("src/LarvaClasificacion.txt");
         } else {
             System.out.println("No hay larvas para alimentar.");
         }
     }
-    
 
     private void PFAsignarAlimento(String larva, String alimento) {
         System.out.println("Asignando " + alimento + " a " + larva);
+    }
+
+    public void imprimirListaLarvasConAlimentos(List<PFLarvaConAlimento> listaLarvasConAlimentos) {
+        System.out.println("Lista de larvas con sus alimentos:");
+        for (PFLarvaConAlimento larvaConAlimento : listaLarvasConAlimentos) {
+            System.out
+                    .println("Larva: " + larvaConAlimento.getLarva() + ", Alimento: " + larvaConAlimento.getAlimento());
+        }
+    }
+
+    private void escribirArchivoLarvaClasificacion(List<PFLarvaConAlimento> listaLarvasConAlimentos) {
+        String nombreArchivo = "src/LarvaClasificacion.txt";
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(nombreArchivo))) {
+            for (PFLarvaConAlimento larvaConAlimento : listaLarvasConAlimentos) {
+                String clasificacion = obtenerClasificacion(larvaConAlimento.getAlimento());
+                writer.write(larvaConAlimento.getLarva() + ";" + larvaConAlimento.getAlimento() + ";" + clasificacion);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private String obtenerClasificacion(String alimento) {
+        // Asignar "Rastreadora" si el alimento es "Hervivoro", de lo contrario, dejarlo vacío
+        return alimento.equalsIgnoreCase("Herbivoro") ? "Rastreadora" : "Muerta";
     }
 }
