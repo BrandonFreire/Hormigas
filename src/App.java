@@ -10,7 +10,8 @@ public class App {
         PFHormiga hormigaLarva = new PFHormiga(PFHormiga.PFTiposHormiga.Larva);
         //hormigaLarva.IFLarvas();
         //System.out.println(hormigaLarva.PFLarvas());
-        hormigaLarva.pfDarComer(hormigaLarva.PFLarvas(40));
+        hormigaLarva.pfCargarAlimentos("src/setAlimento.txt");
+        hormigaLarva.pfDarComer();
 
         // System.out.println(listLarvas);
 

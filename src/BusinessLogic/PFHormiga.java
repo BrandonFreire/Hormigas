@@ -12,6 +12,7 @@ import BusinessLogic.JIInterfaz.IPFHormiga;
 public class PFHormiga implements IPFHormiga {
     private String PFNombreClasificacion;
     private ArrayList<String> PFAlimentos;
+    
 
     public String getPFNombreClasificacion() {
         return PFNombreClasificacion;
@@ -20,14 +21,6 @@ public class PFHormiga implements IPFHormiga {
     public void setPFNombreClasificacion(String pFNombreClasificacion) {
         PFNombreClasificacion = pFNombreClasificacion;
     }
-
-    // public ArrayList<String> getPFAlimentos() {
-    //     return PFAlimentos;
-    // }
-
-    // public void setPFAlimentos(ArrayList<String> pFAlimentos) {
-    //     PFAlimentos = pFAlimentos;
-    // }
 
     public PFHormiga(PFTiposHormiga tiposHormiga) {
         PFAlimentos = new ArrayList<>();
@@ -63,16 +56,6 @@ public class PFHormiga implements IPFHormiga {
         Larva
     }
 
-    public List<String> PFLarvas(int cantidad) {
-        List<String> listLarvas = new ArrayList<>();
-        int num = 1;
-        for (int i = 0; i < cantidad; i++) {
-            listLarvas.add("Larva " + num);
-            num++;
-        }
-        return listLarvas;
-    }
-
     public void pfCargarAlimentos(String PFNombreArchivo) {
         try (BufferedReader br = new BufferedReader(new FileReader(PFNombreArchivo))) {
             String linea;
@@ -83,6 +66,16 @@ public class PFHormiga implements IPFHormiga {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<String> PFLarvas() {
+        List<String> listLarvas = new ArrayList<>();
+        int num = 1;
+        for (int i = 0; i < PFAlimentos.size(); i++) {
+            listLarvas.add("Larva " + num);
+            num++;
+        }
+        return listLarvas;
     }
 
     @Override
@@ -96,19 +89,34 @@ public class PFHormiga implements IPFHormiga {
         return true;
     }
  
-    public void pfDarComer(List<String> PFLarvas) {
-        Random PFRandom = new Random();
-        int numLarva = 1;
-        for (String pfLarva : PFLarvas) {
-            if (comer()) {
-                System.out.println("Alimentado a la larva "+numLarva);
-                int indiceAleatorio = PFRandom.nextInt(PFAlimentos.size());
-                String alimento = PFAlimentos.get(indiceAleatorio);
-                PFAsignarAlimento(pfLarva, alimento);
+    public void pfDarComer() {
+        List<String> larvas = PFLarvas(); 
+        if (!larvas.isEmpty()) { 
+            Random PFRandom = new Random();
+            int numLarva = 1;
+    
+            for (String pfLarva : larvas) {
+                if (comer()) {
+                    System.out.println("Alimentado a la larva " + numLarva);
+                    
+                    if (!PFAlimentos.isEmpty()) { // Verificar si hay alimentos disponibles
+                        int indiceAleatorio = PFRandom.nextInt(PFAlimentos.size());
+                        String alimento = PFAlimentos.get(indiceAleatorio);
+                        PFAsignarAlimento(pfLarva, alimento);
+    
+                        // Quitar el alimento de la lista (si se desea)
+                        PFAlimentos.remove(indiceAleatorio);
+                    } else {
+                        System.out.println("No hay alimentos disponibles para la larva " + numLarva);
+                    }
+                }
+                numLarva++;
             }
-            numLarva++;
+        } else {
+            System.out.println("No hay larvas para alimentar.");
         }
     }
+    
 
     private void PFAsignarAlimento(String larva, String alimento) {
         System.out.println("Asignando " + alimento + " a " + larva);
