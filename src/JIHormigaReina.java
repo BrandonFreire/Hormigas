@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class JIHormigaReina {
     private String nombreClasificacion;
 
@@ -16,7 +19,13 @@ public class JIHormigaReina {
         return bandera;
     }
 
-    public void IFLarvas(){
-        
+    public List<String> IFLarvas(){
+        List<String> listLarvas = new ArrayList<>();
+        int num=1;
+        for (int i = 0; i < 40; i++) {
+            listLarvas.add("Larva "+num);
+            num++;
+        }
+        return listLarvas;
     }
 }
