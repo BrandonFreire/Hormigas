@@ -1,13 +1,22 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import BusinessLogic.PFHormiga;
+
 public class App {
     public static void main(String[] args) throws Exception {
-        JIHormigaReina hormigaReina = new JIHormigaReina("REINA");
-        // List<String> listLarvas = hormigaReina.IFLarvas();
+        //JIHormiga hormigaReina = new JIHormiga();
+        PFHormiga hormigaReina = new PFHormiga(PFHormiga.PFTiposHormiga.Reina);
+        PFHormiga hormigaLarva = new PFHormiga(PFHormiga.PFTiposHormiga.Larva);
+        //hormigaLarva.IFLarvas();
+        System.out.println(hormigaLarva.PFLarvas());
+
+
+
         // System.out.println(listLarvas);
-        IJManejoArchivos manejoArchivos = new IJManejoArchivos();
-        manejoArchivos.eliminarElementoDelArchivo("src/setAlimento.txt", "Carnivoro");
-        manejoArchivos.leerArchivo("src/setAlimento.txt");
+
+        // IJManejoArchivos manejoArchivos = new IJManejoArchivos();
+        // manejoArchivos.eliminarElementoDelArchivo("src/setAlimento.txt", "Carnivoro");
+        // manejoArchivos.leerArchivo("src/setAlimento.txt");
     }
 }
